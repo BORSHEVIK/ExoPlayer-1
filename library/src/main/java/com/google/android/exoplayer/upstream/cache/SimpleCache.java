@@ -55,7 +55,7 @@ public final class SimpleCache implements Cache {
     this.listeners = new HashMap<>();
     // Start cache initialization.
     final ConditionVariable conditionVariable = new ConditionVariable();
-    new Thread("SimpleCache.initialize()") {
+    new Thread() {
       @Override
       public void run() {
         synchronized (SimpleCache.this) {
@@ -254,7 +254,6 @@ public final class SimpleCache implements Cache {
         }
       }
     }
-    evictor.onCacheInitialized();
   }
 
   /**

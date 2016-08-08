@@ -25,11 +25,6 @@ package com.google.android.exoplayer.upstream.cache;
 public final class NoOpCacheEvictor implements CacheEvictor {
 
   @Override
-  public void onCacheInitialized() {
-    // Do nothing.
-  }
-
-  @Override
   public void onStartFile(Cache cache, String key, long position, long length) {
     // Do nothing.
   }

@@ -305,11 +305,11 @@ public final class HlsSampleSource implements SampleSource, SampleSourceReader, 
       return NOTHING_READ;
     }
 
-    Format format = extractor.format;
-    if (!format.equals(downstreamFormat)) {
-      notifyDownstreamFormatChanged(format, extractor.trigger, extractor.startTimeUs);
+    if (downstreamFormat == null || !downstreamFormat.equals(extractor.format)) {
+      // Notify a change in the downstream format.
+      notifyDownstreamFormatChanged(extractor.format, extractor.trigger, extractor.startTimeUs);
+      downstreamFormat = extractor.format;
     }
-    downstreamFormat = format;
 
     if (extractors.size() > 1) {
       // If there's more than one extractor, attempt to configure a seamless splice from the
@@ -329,17 +329,10 @@ public final class HlsSampleSource implements SampleSource, SampleSourceReader, 
     }
 
     MediaFormat mediaFormat = extractor.getMediaFormat(extractorTrack);
-    if (mediaFormat != null) {
-      if (!mediaFormat.equals(downstreamMediaFormats[track])) {
-        formatHolder.format = mediaFormat;
-        downstreamMediaFormats[track] = mediaFormat;
-        return FORMAT_READ;
-      }
-      // If mediaFormat and downstreamMediaFormat[track] are equal but different objects then the
-      // equality check above will have been expensive, comparing the fields in each format. We
-      // update downstreamMediaFormat here so that referential equality can be cheaply established
-      // during subsequent calls.
+    if (mediaFormat != null && !mediaFormat.equals(downstreamMediaFormats[track])) {
+      formatHolder.format = mediaFormat;
       downstreamMediaFormats[track] = mediaFormat;
+      return FORMAT_READ;
     }
 
     if (extractor.getSample(extractorTrack, sampleHolder)) {

@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * Reads OGG packets from an {@link ExtractorInput}.
  */
-/* package */ final class OggParser {
+/* package */ final class OggReader {
 
   public static final int OGG_MAX_SEGMENT_SIZE = 255;
 
@@ -112,9 +112,12 @@ import java.io.IOException;
     Assertions.checkArgument(input.getLength() != C.LENGTH_UNBOUNDED); // never read forever!
     OggUtil.skipToNextPage(input);
     pageHeader.reset();
-    while ((pageHeader.type & 0x04) != 0x04 && input.getPosition() < input.getLength()) {
+    while ((pageHeader.type & 0x04) != 0x04) {
+      if (pageHeader.bodySize > 0) {
+        input.skipFully(pageHeader.bodySize);
+      }
       OggUtil.populatePageHeader(input, pageHeader, headerArray, false);
-      input.skipFully(pageHeader.headerSize + pageHeader.bodySize);
+      input.skipFully(pageHeader.headerSize);
     }
     return pageHeader.granulePosition;
   }
@@ -160,7 +163,7 @@ import java.io.IOException;
    * Returns the {@link OggUtil.PageHeader} of the current page. The header might not have been
    * populated if the first packet has yet to be read.
    * <p>
-   * Note that there is only a single instance of {@code OggParser.PageHeader} which is mutable.
+   * Note that there is only a single instance of {@code OggReader.PageHeader} which is mutable.
    * The value of the fields might be changed by the reader when reading the stream advances and
    * the next page is read (which implies reading and populating the next header).
    *

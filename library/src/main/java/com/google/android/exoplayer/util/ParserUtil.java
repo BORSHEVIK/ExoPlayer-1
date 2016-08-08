@@ -26,30 +26,26 @@ public final class ParserUtil {
   private ParserUtil() {}
 
   public static boolean isEndTag(XmlPullParser xpp, String name) throws XmlPullParserException {
-    return isEndTag(xpp) && xpp.getName().equals(name);
-  }
-
-  public static boolean isEndTag(XmlPullParser xpp) throws XmlPullParserException {
-    return xpp.getEventType() == XmlPullParser.END_TAG;
+    return xpp.getEventType() == XmlPullParser.END_TAG && name.equals(xpp.getName());
   }
 
   public static boolean isStartTag(XmlPullParser xpp, String name)
       throws XmlPullParserException {
-    return isStartTag(xpp) && xpp.getName().equals(name);
+    return xpp.getEventType() == XmlPullParser.START_TAG && name.equals(xpp.getName());
   }
 
   public static boolean isStartTag(XmlPullParser xpp) throws XmlPullParserException {
     return xpp.getEventType() == XmlPullParser.START_TAG;
   }
 
-  public static String getAttributeValue(XmlPullParser xpp, String attributeName) {
-    int attributeCount = xpp.getAttributeCount();
-    for (int i = 0; i < attributeCount; i++) {
-      if (attributeName.equals(xpp.getAttributeName(i))) {
-        return xpp.getAttributeValue(i);
-      }
-    }
-    return null;
+  /**
+   * Removes the namespace part ('^.*:') of the attributeName.
+   *
+   * @param attributeName the string to remove the namespace prefix from
+   * @return the name of the attribute without the prefix
+   */
+  public static String removeNamespacePrefix(String attributeName) {
+    return attributeName.replaceFirst("^.*:", "");
   }
 
 }

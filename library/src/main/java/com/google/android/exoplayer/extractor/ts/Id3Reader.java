@@ -77,9 +77,8 @@ import com.google.android.exoplayer.util.ParsableByteArray;
       }
     }
     // Write data to the output.
-    int bytesToWrite = Math.min(bytesAvailable, sampleSize - sampleBytesRead);
-    output.sampleData(data, bytesToWrite);
-    sampleBytesRead += bytesToWrite;
+    output.sampleData(data, bytesAvailable);
+    sampleBytesRead += bytesAvailable;
   }
 
   @Override

@@ -42,8 +42,8 @@ public final class TtmlStyleTest extends InstrumentationTestCase {
         assertTrue(style.isLinethrough());
         assertEquals(TtmlStyle.STYLE_BOLD_ITALIC, style.getStyle());
         assertEquals(FONT_FAMILY, style.getFontFamily());
-        assertEquals(Color.WHITE, style.getFontColor());
-        assertFalse("do not inherit backgroundColor", style.hasBackgroundColor());
+        assertEquals(Color.WHITE, style.getColor());
+        assertFalse("do not inherit backgroundColor", style.hasBackgroundColorSpecified());
     }
 
     public void testChainStyle() {
@@ -53,7 +53,7 @@ public final class TtmlStyleTest extends InstrumentationTestCase {
         assertTrue(style.isLinethrough());
         assertEquals(TtmlStyle.STYLE_BOLD_ITALIC, style.getStyle());
         assertEquals(FONT_FAMILY, style.getFontFamily());
-        assertEquals(FOREGROUND_COLOR, style.getFontColor());
+        assertEquals(FOREGROUND_COLOR, style.getColor());
         // do inherit backgroundColor when chaining
         assertEquals("do not inherit backgroundColor when chaining",
             BACKGROUND_COLOR, style.getBackgroundColor());
@@ -65,7 +65,7 @@ public final class TtmlStyleTest extends InstrumentationTestCase {
         ancestor.setItalic(true);
         ancestor.setBold(true);
         ancestor.setBackgroundColor(BACKGROUND_COLOR);
-        ancestor.setFontColor(FOREGROUND_COLOR);
+        ancestor.setColor(FOREGROUND_COLOR);
         ancestor.setLinethrough(true);
         ancestor.setUnderline(true);
         ancestor.setFontFamily(FONT_FAMILY);
@@ -109,17 +109,17 @@ public final class TtmlStyleTest extends InstrumentationTestCase {
     }
 
     public void testColor() {
-        assertFalse(style.hasFontColor());
-        style.setFontColor(Color.BLACK);
-        assertEquals(Color.BLACK, style.getFontColor());
-        assertTrue(style.hasFontColor());
+        assertFalse(style.hasColorSpecified());
+        style.setColor(Color.BLACK);
+        assertEquals(Color.BLACK, style.getColor());
+        assertTrue(style.hasColorSpecified());
     }
 
     public void testBackgroundColor() {
-        assertFalse(style.hasBackgroundColor());
+        assertFalse(style.hasBackgroundColorSpecified());
         style.setBackgroundColor(Color.BLACK);
         assertEquals(Color.BLACK, style.getBackgroundColor());
-        assertTrue(style.hasBackgroundColor());
+        assertTrue(style.hasBackgroundColorSpecified());
     }
 
     public void testId() {

@@ -191,7 +191,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
       connection = makeConnection(dataSpec);
     } catch (IOException e) {
       throw new HttpDataSourceException("Unable to connect to " + dataSpec.uri.toString(), e,
-          dataSpec, HttpDataSourceException.TYPE_OPEN);
+          dataSpec);
     }
 
     int responseCode;
@@ -200,7 +200,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
     } catch (IOException e) {
       closeConnectionQuietly();
       throw new HttpDataSourceException("Unable to connect to " + dataSpec.uri.toString(), e,
-          dataSpec, HttpDataSourceException.TYPE_OPEN);
+          dataSpec);
     }
 
     // Check for a valid response code.
@@ -240,7 +240,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
       inputStream = connection.getInputStream();
     } catch (IOException e) {
       closeConnectionQuietly();
-      throw new HttpDataSourceException(e, dataSpec, HttpDataSourceException.TYPE_OPEN);
+      throw new HttpDataSourceException(e, dataSpec);
     }
 
     opened = true;
@@ -257,7 +257,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
       skipInternal();
       return readInternal(buffer, offset, readLength);
     } catch (IOException e) {
-      throw new HttpDataSourceException(e, dataSpec, HttpDataSourceException.TYPE_READ);
+      throw new HttpDataSourceException(e, dataSpec);
     }
   }
 
@@ -269,7 +269,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
         try {
           inputStream.close();
         } catch (IOException e) {
-          throw new HttpDataSourceException(e, dataSpec, HttpDataSourceException.TYPE_CLOSE);
+          throw new HttpDataSourceException(e, dataSpec);
         }
       }
     } finally {
